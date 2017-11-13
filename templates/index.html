@@ -39,7 +39,9 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">sStress</a>
+          <a class="navbar-brand" href="#">Главная</a>
+          <a class="navbar-brand" href="#">Акцентуаторы</a>
+          <a class="navbar-brand" href="#">О нас</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           
@@ -51,7 +53,7 @@
       <div class="container">
         <h1>sStr<font color="#88B04B">e</font>ss</h1>
         <p>Мы ставим ударения!</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Узнать больше &raquo;</a></p>
+        <!-- p><a class="btn btn-primary btn-lg" href="#" role="button">Узнать больше &raquo;</a></p-->
       </div>
     </div>
     
@@ -67,18 +69,16 @@
     <div class="tab-content">
         <div id="lstm" class="tab-pane fade in active">
           <form class="form-horizontal" method="POST" action="/">
-           <div class="form-group">
-              <label for="lstm_text">LSTM</label>
-              <textarea class="form-control lstm" rows="10" id="lstm_text" name="lstm"></textarea>
-           </div>
+              <textarea class="form-control lstm" rows="20" id="lstm_text" name="lstm"></textarea>
           </form>
+          </br>
         </div>
         
         <div id="rules" class="tab-pane fade">
-           <div class="form-group">
-              <label for="rule_text">Правила</label>
-              <textarea class="form-control rules" rows="10" id="rule_text"></textarea>
-           </div>
+           <form class="form-horizontal" method="POST" action="/">
+              <textarea class="form-control rules" rows="20" id="rule_text"></textarea>
+           </form>
+           </br>
         </div>
       </div>
       <p><a class="btn btn-primary btn-lg pushme" href="#" role="button">Расставить ударения</a></p>
@@ -87,8 +87,10 @@
       <hr>
 
       <footer>
+      <div class="container">
         <p>&copy; sStress 2017</p>
       </footer>
+      </div>
     </div> <!-- /container --> 
         <script src="{{ url_for('static', filename='js/vendor/jquery-1.11.2.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>
