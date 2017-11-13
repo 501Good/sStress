@@ -30,9 +30,8 @@ def index():
 @app.route('/predict/', methods=['GET', 'POST'])
 def predict():
     text = request.get_data().decode('utf-8')
-    text = text.replace("'", "")
-    print(text)
-    accented_text = accent.put_stress(text)
+    text = text.replace("́", "")
+    accented_text = accent.put_stress(text, "́")
     return accented_text
 
 
