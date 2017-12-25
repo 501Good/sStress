@@ -9,7 +9,7 @@ $(document).ready(function () {
 		url: $SCRIPT_ROOT + "/predict/",
 		data: text,
 		success: function(data){
-			document.getElementById("lstm_text").value = data;
+			$("#resultsContainer").html(data);
 		}
 	});
 

@@ -2,7 +2,7 @@ from keras.models import model_from_json
 import tensorflow as tf
 import numpy as np
 import re
-from tokenizer import tokenize
+from .tokenizer import tokenize
 
 VOWELS = 'аеиоуэюяыё'
 REG = '[{}].*[{}]'.format(VOWELS, VOWELS)
@@ -10,8 +10,9 @@ MAXLEN = 40
 CHARS = ["'", '-', '_', 'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'й', 'к',
         'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', 'ё']
 CHAR_INDICES = dict((c, i) for i, c in enumerate(CHARS))
-MODEL_FILE = "text_model.json"
-WEIGHTS_FILE = "on-texts-weights-improvement-09-0.96.hdf5"
+MODEL_FILE = "lstm/text_model.json"
+WEIGHTS_FILE = "lstm/on-texts-weights-improvement-09-0.96.hdf5"
+ALL_FORMS_FILENAME = "lstm/ruwiktionary_zalizniak.sm"
 
 
 class AccentLSTM(object):
@@ -20,6 +21,16 @@ class AccentLSTM(object):
     def __init__(self):
         self.model_file = MODEL_FILE
         self.weights_file = WEIGHTS_FILE
+        self.all_forms = {}
+        with open(ALL_FORMS_FILENAME, encoding='utf-8') as all_forms_file:
+            for form in all_forms_file:
+                if "'" in form:
+                    form = form.strip('\n')
+                    unstressed_form = re.sub("['`]", '', form)
+                    if unstressed_form in self.all_forms:
+                        self.all_forms[unstressed_form].append(form.find("'"))
+                    else:
+                        self.all_forms[unstressed_form] = [form.find("'")]
 
 
     def initialize(self):
@@ -79,6 +90,30 @@ class AccentLSTM(object):
         else:
             acc_word = word[:index+1]+'\''+ word[index+1:]
             return(acc_word)
+    
+    def __is_in_dictionary(self, word):
+        if word.lower() in self.all_forms:
+            return True
+        else:
+            return False
+            
+    def __dictionary_stress(self, word):
+        stressed_word = ''
+        lword = word.lower()
+        if len(self.all_forms[lword]) == 1:
+            stressed_word = word[:self.all_forms[lword][0]] + "'" + word[self.all_forms[lword][0]:]
+        else:
+            return None
+        return stressed_word
+        
+        
+    def __is_small(self, word):
+        counter = 0
+        for letter in word:
+            if letter in 'ёуеыаоэяиюЁУЕЫАОЭЯИЮ':
+                counter = counter + 1
+        if counter <= 1:
+            return True
 
 
     def put_stress(self, text, stress_symbol="'"):
@@ -97,19 +132,44 @@ class AccentLSTM(object):
                 if not bool(re.search(REG, w)):
                     pass
                 else:
-                    accented_phrase.append(self.__predict(w))
+                    accented_phrase.append(self.__predict(w))      
             final = []
             
+            #print(accented_phrase)
+            
             for token in tokens:
-                try:
-                    temp = accented_phrase[0].replace("'", '')
-                except IndexError:
-                    temp = ''
-                if temp == token.lower():
-                    stress_position = accented_phrase[0].find("'")
-                    final.append(token[:stress_position] + stress_symbol + token[stress_position:])
-                    accented_phrase = accented_phrase[1:]
+                #print(accented_phrase)
+                '''
+                elif self.__is_in_dictionary(token):
+                    stressed_token = self.__dictionary_stress(token)                    
+                    if stressed_token is None: 
+                        try:
+                            temp = accented_phrase[0].replace("'", '')
+                        except IndexError:
+                            temp = ''
+                        if temp == token.lower():
+                            stress_position = accented_phrase[0].find("'")
+                            final.append(token[:stress_position] + stress_symbol + token[stress_position:])
+                            accented_phrase = accented_phrase[1:]
+                        else:
+                            final.append(token)
+                    else:
+                        final.append(stressed_token)
+                        accented_phrase = accented_phrase[1:]
+                '''
+                
+                if self.__is_small(token):
+                    final.append(token)                    
                 else:
-                    final.append(token)
+                    try:
+                        temp = accented_phrase[0].replace("'", '')
+                    except IndexError:
+                        temp = ''
+                    if temp == token.lower():
+                        stress_position = accented_phrase[0].find("'")
+                        final.append(token[:stress_position] + stress_symbol + token[stress_position:])
+                        accented_phrase = accented_phrase[1:]
+                    else:
+                        final.append(token)
             final = ''.join(final)
             return final
