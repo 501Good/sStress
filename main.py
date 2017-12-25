@@ -20,6 +20,7 @@ ALLOWED_EXTENSIONS = set(['txt'])
 import sys
 import os
 import lstm.text_accentAPI as acc
+from lstm.tokenizer import tokenize
 
 app = Flask(__name__)
 app.secret_key = 'lolkekcheburek'
@@ -37,6 +38,11 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     return render_template('index.html')
+    
+    
+@app.route('/test')
+def test():
+    return render_template('test.html')
 
     
 @app.route('/upload', methods=['GET', 'POST'])
@@ -82,6 +88,25 @@ def predict():
     
     return new_accented_text
 
-
+    
+@app.route('/testme/', methods=['GET', 'POST'])
+def testme():
+    text = request.get_data().decode('utf-8')
+    orig_text = text
+    text = text.replace("́", "")
+    text = text.replace("'", "")
+    accented_text = accent.put_stress(text, "'")
+    orig_tokens = tokenize(orig_text)
+    accented_tokens = tokenize(accented_text)
+    assert len(orig_tokens) == len(accented_tokens)
+    result = ""
+    for i in range(len(orig_tokens)):
+        if orig_tokens[i].find("'") == accented_tokens[i].find("'"):
+            result += '<b><span style="background-color: #82E0AA">%s</span></b>' % orig_tokens[i]
+        else:
+            result += '<b><span style="background-color: #E74C3C"><a href="#" data-toogle="tooltip" title="Ваш вариант: %s">%s</a></span></b>' % (accented_tokens[i], orig_tokens[i])
+    
+    return result
+    
 if __name__ == '__main__':
     app.run(port=getuid() + ADDITIVE_FOR_UID, debug=True)
