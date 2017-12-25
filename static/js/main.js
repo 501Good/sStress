@@ -15,4 +15,10 @@ $(document).ready(function () {
 
     return false;
   });
+  
+  $(".clear").click(function () {
+	  $("#lstm_text").val('');
+	  
+	  return false;
+  });
 });

@@ -17,4 +17,11 @@ $(document).ready(function () {
 
     return false;
   });
+  
+  $(".clear").click(function () {
+	  $("#test_text").val('');
+	  
+	  return false;
+  });
+  
 });
