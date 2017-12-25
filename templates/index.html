@@ -56,10 +56,9 @@
         <p>Мы ставим ударения!</p>
         <!-- p><a class="btn btn-primary btn-lg" href="#" role="button">Узнать больше &raquo;</a></p-->
       </div>
-    </div>
     
-    </br>
-    </br>
+    <br/>
+    <br/>
     
     <div class="container">
       <div class="row">
@@ -74,30 +73,31 @@
                     <option value="lstm">LSTM</option>
                     <option value="rules">На основе словаря</option>
                   </select>
-                </div>    
+                </div>  
+              </div>  
                 <a class="btn btn-primary btn-lg pushme" href="#" role="button" style="width: 140px">
                     <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
                     Обработать
                 </a>
-                <div class="form-group">
-                  <a class="btn btn-link clear" role="button" href="#">
+              <div class="form-group">
+                <a class="btn btn-link clear" role="button" href="#">
                   Очистить
-                  </a>
-                </div>
+                </a>
               </div>
-          </div>
-          
-          <div class="col-md-1">
-          </div>
-          
-          <div class="col-md-4">
-            <form action="/" method="POST" enctype="multipart/from-data">
-              <input type="file"  name="file" />
-              <input type="submit" class="btn btn-primary file-sender" />
             </form>
           </div>
+          
+        <div class="col-md-1">
+        </div>
+          
+        <div class="col-md-4">
+          <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file"  name="file" />
+            <input type="submit" class="btn btn-primary file-sender" />
+          </form>
         </div>
       </div>
+    </div>
     
     <br/>
     
@@ -113,7 +113,7 @@
     
     
     <div class="container">
-        <div class="col-md-12" id="resultsContainer" class="row">
+        <div class="row col-md-12" id="resultsContainer">
             
         </div>
     </div>
@@ -122,11 +122,11 @@
       <hr>
 
       <footer>
-      <div class="container">
-        <p>&copy; sStress 2017</p>
+        <div class="container">
+          <p>&copy; sStress 2017</p>
+        </div>
       </footer>
-      </div>
-    </div> <!-- /container --> 
+     <!-- /container --> 
         <script src="{{ url_for('static', filename='js/vendor/jquery-1.11.2.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>

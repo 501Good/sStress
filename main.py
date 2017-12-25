@@ -11,16 +11,17 @@ except ImportError:
         return DEFAULT_PORT - ADDITIVE_FOR_UID
 
 import requests
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
-
-UPLOAD_FOLDER = '/uploads'
-ALLOWED_EXTENSIONS = set(['txt'])
 
 import sys
 import os
 import lstm.text_accentAPI as acc
+from time import time
 from lstm.tokenizer import tokenize
+
+UPLOAD_FOLDER = os.getcwd() + '/uploads'
+ALLOWED_EXTENSIONS = set(['txt'])
 
 app = Flask(__name__)
 app.secret_key = 'lolkekcheburek'
@@ -45,24 +46,31 @@ def test():
     return render_template('test.html')
 
     
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['POST', 'GET'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
+            print(request.files)
+            print('No file part')
             return redirect(request.url)
         file = request.files['file']
         # if user does not select file, browser also
         # submit a empty part without filename
         if file.filename == '':
-            flash('No selected file')
+            print('No selected file')
             return redirect(request.url)
+        print(file.filename)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            filetext = open('uploads/' + filename, encoding='utf-8').read()
+            accented_text = accent.put_stress(filetext, "'")
+            newfilename = 'accented_' + str(time()).replace('.', '') + '.txt'
+            with open('uploads/' + newfilename, 'w', encoding='utf-8') as accented_file:
+                accented_file.write(accented_text)
             return redirect(url_for('uploaded_file',
-                                    filename=filename))
+                                    filename=newfilename))
     return render_template('index.html')   
 
 
