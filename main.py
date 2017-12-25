@@ -104,7 +104,7 @@ def testme():
         if orig_tokens[i].find("'") == accented_tokens[i].find("'"):
             result += '<b><span style="background-color: #82E0AA">%s</span></b>' % orig_tokens[i]
         else:
-            result += '<b><span style="background-color: #E74C3C"><a href="#" data-toogle="tooltip" title="Ваш вариант: %s">%s</a></span></b>' % (accented_tokens[i], orig_tokens[i])
+            result += '<b><span style="background-color: #E74C3C"><a href="#" data-toogle="tooltip" title="Ваш вариант: %s">%s</a></span></b>' % (orig_tokens[i], accented_tokens[i])
     
     return result
     
