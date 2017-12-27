@@ -3,7 +3,7 @@
 import os
 import lstm.text_accentAPI as acc
 from flask import Flask, render_template, request, redirect, \
-    url_for, send_from_directory
+    url_for, send_from_directory, jsonify
 from werkzeug.utils import secure_filename
 from time import time
 from lstm.tokenizer import tokenize
@@ -80,8 +80,8 @@ def predict():
     for i, char in enumerate(temp_accented_text):
         if i + 1 < len(temp_accented_text):
             if temp_accented_text[i + 1] in ["'", "́"]:
-                new_accented_text += '<b><span style="background-color: ' + \
-                    '#82E0AA">{}</span></b>'.format(char)
+                new_accented_text += '<b><span style="background-color: \
+                                     #82E0AA">{}</span></b>'.format(char)
             elif char not in ["'", "́"]:
                 new_accented_text += char
     return new_accented_text
@@ -98,15 +98,23 @@ def testme():
     accented_tokens = tokenize(accented_text)
     assert len(orig_tokens) == len(accented_tokens)
     result = ""
+    correct = 0
+    missed = 0
     for i in range(len(orig_tokens)):
         if orig_tokens[i].find("'") == accented_tokens[i].find("'"):
-            result += '<b><span style="background-color: ' + \
-                '#82E0AA">{}</span></b>'.format(orig_tokens[i])
+            result += '<b><span style="background-color: \
+                        #82E0AA">{}</span></b>'.format(orig_tokens[i])
+            if orig_tokens[i].find("'") == accented_tokens[i].find("'") != -1:
+                correct += 1
         else:
-            result += '<b><span style="background-color: ' + \
-                '#E74C3C"><a href="#" class="deco-none" ' + \
-                'data-toogle="tooltip" title="Ваш вариант: {}">{}</a></span></b>'.format(orig_tokens[i], accented_tokens[i])
-    return result
+            result += '<b><span style="background-color: \
+                       #E74C3C"><a href="#" class="deco-none" \
+                        data-toogle="tooltip" \
+                        title="Ваш вариант: {}">\
+                        {}</a></span></b>'.format(orig_tokens[i],
+                                                  accented_tokens[i])
+            missed += 1
+    return jsonify({'result': result, 'percent': correct / (missed + correct)})
 
 
 if __name__ == '__main__':

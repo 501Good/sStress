@@ -40,6 +40,7 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="#">Главная</a>
+          <a class="navbar-brand" href="/test">Проверка навыков</a>
           <a class="navbar-brand" href="#">Акцентуаторы</a>
           <a class="navbar-brand" href="#">О нас</a>
         </div>
@@ -55,43 +56,77 @@
         <p>Мы ставим ударения!</p>
         <!-- p><a class="btn btn-primary btn-lg" href="#" role="button">Узнать больше &raquo;</a></p-->
       </div>
-    </div>
     
-    </br>
-    </br>
+    <br/>
+    <br/>
     
     <div class="container">
-    <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#lstm">LSTM</a></li>
-      <li><a data-toggle="tab" href="#rules">Правила</a></li>
-    </ul>
-    
-    <div class="tab-content">
-        <div id="lstm" class="tab-pane fade in active">
-          <form class="form-horizontal" method="POST" action="/">
-              <textarea class="form-control lstm" rows="20" id="lstm_text" name="lstm"></textarea>
+      <div class="row">
+         <div class="col-md-7" id="sendFormContainer">
+            <form action="/"  method="POST" role="form">    
+              <div class="form-group">
+                <textarea name="lstm" rows="9" id="lstm_text" class="form-control lstm" placeholder="Текст, в котором нужно расставить ударения"></textarea>
+              </div>
+              <div class="form-inline">
+                <div class="form-group">
+                  <select class="form-control" id="ServerKey" name="ServerKey">
+                    <option value="lstm">LSTM</option>
+                    <option value="rules">На основе словаря</option>
+                  </select>
+                </div>  
+              </div>  
+                <a class="btn btn-primary btn-lg pushme" href="#" role="button" style="width: 140px">
+                    <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                    Обработать
+                </a>
+              <div class="form-group">
+                <a class="btn btn-link clear" role="button" href="#">
+                  Очистить
+                </a>
+              </div>
+            </form>
+          </div>
+          
+        <div class="col-md-1">
+        </div>
+          
+        <div class="col-md-4">
+          <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file"  name="file" />
+            <input type="submit" class="btn btn-primary file-sender" />
           </form>
-          </br>
-        </div>
-        
-        <div id="rules" class="tab-pane fade">
-           <form class="form-horizontal" method="POST" action="/">
-              <textarea class="form-control rules" rows="20" id="rule_text"></textarea>
-           </form>
-           </br>
         </div>
       </div>
-      <p><a class="btn btn-primary btn-lg pushme" href="#" role="button">Расставить ударения</a></p>
+    </div>
+    
+    <br/>
+    
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+            <hr>
+            <br/>
+        </div>
       </div>
-      
+    </div>
+    
+    
+    
+    <div class="container">
+        <div class="row col-md-12" id="resultsContainer">
+            
+        </div>
+    </div>
+
+      <br/>
       <hr>
 
       <footer>
-      <div class="container">
-        <p>&copy; sStress 2017</p>
+        <div class="container">
+          <p>&copy; sStress 2017</p>
+        </div>
       </footer>
-      </div>
-    </div> <!-- /container --> 
+     <!-- /container --> 
         <script src="{{ url_for('static', filename='js/vendor/jquery-1.11.2.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
