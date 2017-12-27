@@ -17,6 +17,24 @@
                 padding-top: 50px;
                 padding-bottom: 20px;
             }
+
+            .pie-title-center {
+              display: inline-block;
+              position: relative;
+              text-align: center;
+            }
+
+            .pie-value {
+              display: block;
+              position: absolute;
+              font-size: 14px;
+              height: 40px;
+              top: 50%;
+              left: 0;
+              right: 0;
+              margin-top: -20px;
+              line-height: 40px;
+            }
         </style>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
@@ -56,10 +74,9 @@
         <p>Мы ставим ударения!</p>
         <!-- p><a class="btn btn-primary btn-lg" href="#" role="button">Узнать больше &raquo;</a></p-->
       </div>
-    </div>
     
-    </br>
-    </br>
+    <br/>
+    <br/>
 	
     
     <div class="container">
@@ -80,7 +97,7 @@
                   </a>
                 </div>
               </div>
-          </div>
+            </form>
         </div>
       </div>
       
@@ -101,7 +118,9 @@
             
         </div>
         <div class="col-md-5">
-            
+            <div id="example"  class="pie-title-center" data-percent="25">
+              <span class="pie-value"></span>
+            </div>
         </div>
       </div>
     </div>
@@ -114,12 +133,13 @@
       <footer>
       <div class="container">
         <p>&copy; sStress 2017</p>
-      </footer>
       </div>
+      </footer>
     </div> <!-- /container --> 
         <script src="{{ url_for('static', filename='js/vendor/jquery-1.11.2.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/test.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/pie-chart.js') }}"></script>
 
     </body>
 </html>

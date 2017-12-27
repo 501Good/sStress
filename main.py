@@ -3,7 +3,7 @@
 import os
 import lstm.text_accentAPI as acc
 from flask import Flask, render_template, request, redirect, \
-    url_for, send_from_directory
+    url_for, send_from_directory, jsonify
 from werkzeug.utils import secure_filename
 from time import time
 from lstm.tokenizer import tokenize
@@ -98,16 +98,22 @@ def testme():
     accented_tokens = tokenize(accented_text)
     assert len(orig_tokens) == len(accented_tokens)
     result = ""
+    correct = 0
+    missed = 0
     for i in range(len(orig_tokens)):
         if orig_tokens[i].find("'") == accented_tokens[i].find("'"):
             result += '<b><span style="background-color: \
                         #82E0AA">{}</span></b>'.format(orig_tokens[i])
+            correct += 1
         else:
             result += '<b><span style="background-color: \
                        #E74C3C"><a href="#" class="deco-none" \
-                        data-toogle="tooltip" title="Ваш вариант: {}">\
-                        {}</a></span></b>'.format(orig_tokens[i], accented_tokens[i])
-    return result
+                        data-toogle="tooltip" \
+                        title="Ваш вариант: {}">\
+                        {}</a></span></b>'.format(orig_tokens[i],
+                                                  accented_tokens[i])
+            missed += 1
+    return jsonify({'result': result, 'percent': correct / (missed + correct)})
 
 
 if __name__ == '__main__':

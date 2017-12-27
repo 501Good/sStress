@@ -11,7 +11,17 @@ $(document).ready(function () {
 		url: $SCRIPT_ROOT + "/testme/",
 		data: text,
 		success: function(data){
-			$("#testResultsContainer").html(data);
+			$("#testResultsContainer").html(data.result);
+            $('#example').attr('data-percent', data.percent * 100);
+            $("#example").pieChart({
+                        barColor: '#68b828',
+                        trackColor: '#eee',
+                        lineCap: 'round',
+                        lineWidth: 8,
+                        onStep: function (from, to, percent) {
+                            $(this.element).find('.pie-value').text(Math.round(percent) + '%');
+                        }
+                    });
 		}
 	});
 
