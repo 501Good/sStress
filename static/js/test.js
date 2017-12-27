@@ -12,6 +12,7 @@ $(document).ready(function () {
 		data: text,
 		success: function(data){
 			$("#testResultsContainer").html(data.result);
+            $("#testScoreContainer").html('<div id="example"  class="pie-title-center" data-percent="0"><span class="pie-value"></span></div>');
             $('#example').attr('data-percent', data.percent * 100);
             $("#example").pieChart({
                         barColor: '#68b828',
