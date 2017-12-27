@@ -151,7 +151,7 @@ def initialize(current_file):
     all_tokens = nltk.word_tokenize(current_file)
     stressed_words, biggest_suffixes, stress_types, poses = [], [], [], []
     for token in all_tokens:
-        stressed_word, biggest_suffix, stress_type = token, '', ''
+        stressed_word, biggest_suffix, stress_type, pos = token, '', '', ''
         original_token = token
         token = token.lower()
         word_possible_stress = {}
