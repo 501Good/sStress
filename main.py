@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
+import rules.rules_main as rules
 import lstm.text_accentAPI as acc
 from flask import Flask, render_template, request, redirect, \
     url_for, send_from_directory, jsonify
@@ -85,6 +87,51 @@ def predict():
             elif char not in ["'", "́"]:
                 new_accented_text += char
     return new_accented_text
+
+
+
+@app.route('/predict_rules/', methods=['GET', 'POST'])
+def predict_rules():
+    text = request.get_data().decode('utf-8')
+    text = text.replace("́", "")
+    text = text.replace("'", "")
+    accented_text, accented_tokens, biggest_suffixes, stress_types, poses = rules.initialize(text)
+    for i in range(len(accented_tokens)):
+        if "'" in accented_tokens[i]:
+            new_word = ''
+            for index, char in enumerate(accented_tokens[i]):
+                if index + 1 < len(accented_tokens[i]):
+                    if accented_tokens[i][index + 1] in ["'", "́"]:
+                        new_word += '<b><span style="background-color: ' + \
+                            '#82E0AA">{}</span></b>'.format(char)
+                    elif char not in ["'", "́"]:
+                        new_word += char
+                else:
+                    if char not in ["'", "́"]:
+                        new_word += char
+
+            if poses[i] == 'NOUN': formated_pos = 'существительное'
+            if poses[i] == 'ADJF': formated_pos = 'прилагательное'
+            if poses[i] == 'VERB': formated_pos = 'глагол'
+
+            if stress_types[i] == 'suffix': formated_type = 'суффикс'
+            if stress_types[i] == 'suffix 1': formated_type = 'первый слог суффикса'
+            if stress_types[i] == 'suffix 2': formated_type = 'второй слог суффикса'
+            if stress_types[i] == 'suffix 3': formated_type = 'третий слог суффикса'
+            if stress_types[i] == 'presuffix': formated_type = 'предсуффиксальный слог'
+            if stress_types[i] == 'first vowel': formated_type = 'первый слог'
+            if stress_types[i] == 'prefix': formated_type = 'приставку'
+            if stress_types[i] == 'root': formated_type = 'корень'
+            if stress_types[i] == 'type B': formated_type = 'флексию'
+
+            new_text = '<span title="Слово было распознано как {},'.format(formated_pos) + \
+                                 'в котором лемма оканчивается на {}.\n'.format(biggest_suffixes[i]) + \
+                                 'В таких случаях ударение всегда падает на {}.">'.format(formated_type) + \
+                                 '{}</span>'.format(new_word)
+
+            accented_text = re.sub(accented_tokens[i], new_text, accented_text, 1)
+
+    return accented_text
 
 
 @app.route('/testme/', methods=['GET', 'POST'])

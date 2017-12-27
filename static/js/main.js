@@ -16,7 +16,16 @@ $(document).ready(function () {
 
         return false;
     } else if ($("#ServerKey").val() === "rules") {
-        $("#resultsContainer").text("To be done...");
+        $.ajax({
+            type: "POST",
+            url: $SCRIPT_ROOT + "/predict_rules/",
+            data: text,
+            success: function(data){
+              $("#resultsContainer").html(data);
+            }
+        });
+
+        return false;
     }
     });
   
