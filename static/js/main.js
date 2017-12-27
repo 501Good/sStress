@@ -1,6 +1,7 @@
 // DOM is ready
 $(document).ready(function () {
   // Bind click event
+
   $('.pushme').click(function () {
 	  var text = document.getElementById("lstm_text").value;
     
