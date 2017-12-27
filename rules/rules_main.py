@@ -158,7 +158,7 @@ def initialize(current_file):
         if re.search('^[А-ЯЁа-яё\-]+$', token) != None and token != '-':
             token = re.sub('^-', '', token)
             pos = morph.parse(token)[0].tag.POS
-            #pos = nltk.pos_tag(token, lang='rus')
+            # pos = nltk.pos_tag(token, lang='rus')
             lemma = morph.parse(token)[0].normal_form
             if pos != None:
                 current_file, stressed_word, biggest_suffix, stress_type = process_stresses('NOUN', rules_noun, pos, lemma, token, original_token, word_possible_stress, current_file)

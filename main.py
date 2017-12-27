@@ -36,6 +36,16 @@ def test():
     return render_template('test.html')
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/stresses')
+def stresses():
+    return render_template('stresses.html')
+
+
 @app.route('/upload', methods=['POST', 'GET'])
 def upload_file():
     if request.method == 'POST':
@@ -94,8 +104,7 @@ def predict_rules():
     text = request.get_data().decode('utf-8')
     text = text.replace("́", "")
     text = text.replace("'", "")
-    accented_text, accented_tokens, \
-        biggest_suffixes, stress_types, poses = rules.initialize(text)
+    accented_text, accented_tokens, biggest_suffixes, stress_types, poses = rules.initialize(text)
     for i in range(len(accented_tokens)):
         if "'" in accented_tokens[i]:
             new_word = ''
@@ -136,12 +145,9 @@ def predict_rules():
             if stress_types[i] == 'type B':
                 formated_type = 'флексию'
 
-            new_text = '<span title="Слово было \
-            распознано как {},'.format(formated_pos) + \
-                'в котором лемма оканчивается \
-                на {}.\n'.format(biggest_suffixes[i]) + \
-                'В таких случаях ударение всегда падает \
-                на {}.">'.format(formated_type) + \
+            new_text = '<span title="Слово было распознано как {},'.format(formated_pos) + \
+                'в котором лемма оканчивается на {}.\n'.format(biggest_suffixes[i]) + \
+                'В таких случаях ударение всегда падает на {}.">'.format(formated_type) + \
                 '{}</span>'.format(new_word)
 
             accented_text = re.sub(accented_tokens[i],

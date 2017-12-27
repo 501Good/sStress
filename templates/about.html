@@ -39,10 +39,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Главная</a>
+          <a class="navbar-brand" href="/">Главная</a>
           <a class="navbar-brand" href="/test">Проверка навыков</a>
           <a class="navbar-brand" href="/stresses">Акцентуаторы</a>
-          <a class="navbar-brand" href="/about">О проекте</a>
+          <a class="navbar-brand" href="#">О проекте</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           
@@ -50,8 +50,8 @@
       </div>
     </nav>
 
-
     <main role="main" class="container">
+
     <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="container">
         <h1>sStr<font color="#88B04B">e</font>ss</h1>
@@ -63,62 +63,50 @@
     <br/>
     
     <div class="container">
-      <div class="row">
-         <div class="col-md-7" id="sendFormContainer">
-            <form action="/"  method="POST" role="form">    
-              <div class="form-group">
-                <textarea name="lstm" rows="9" id="lstm_text" class="form-control lstm" placeholder="Текст, в котором нужно расставить ударения"></textarea>
-              </div>
-              <div class="form-inline">
-                <div class="form-group">
-                  <select class="form-control" id="ServerKey" name="ServerKey">
-                    <option value="lstm">LSTM</option>
-                    <option value="rules">На основе словаря</option>
-                  </select>
-                </div>  
-              </div>  
-                <a class="btn btn-primary btn-lg pushme" href="#" role="button" style="width: 140px">
-                    <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
-                    Обработать
-                </a>
-              <div class="form-group">
-                <a class="btn btn-link clear" role="button" href="#">
-                  Очистить
-                </a>
-              </div>
-            </form>
-          </div>
-          
-        <div class="col-md-1">
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#home">Задача проекта</a></li>
+        <li><a data-toggle="tab" href="#menu1">Что мы имеем</a></li>
+        <li><a data-toggle="tab" href="#menu2">Кто мы</a></li>
+      </ul>
+
+      <br/>
+
+      <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+          <p>Создать акцентуатор для русского языка - автоматическую систему, принимающую на вход текст на русском языке и расставляющую в нем ударения.</p>
+          <p>Акцентуатор может быть встроен как модуль в системы для генерации речи, также он может быть полезен изучающим русский язык иностранцам.</p>
         </div>
-          
-        <div class="col-md-4">
-          <form action="/upload" method="post" enctype="multipart/form-data">
-            <input type="file"  name="file" />
-            <input type="submit" class="btn btn-primary file-sender" />
-          </form>
+        <div id="menu1" class="tab-pane fade">
+          <p>На нашем сайте выложены два акцентуатора, один - нейросеть, обученная на большом корпусе. Она быстро и хорошо работающая черная коробка. Если вам нужно быстро проставить в тексте ударения, вам к ней.</p>
+          <p>Второй акцентуатор правиловый, это результат долгого и кропотливого труда. Если вы хотите узнать не только само ударение, но и то, почему его позиция именно такая, то вам поможет наш правиловый акцентуатор.</p>
         </div>
-      </div>
-    </div>
-    
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-            <hr>
+        <div id="menu2" class="tab-pane fade">
+          <p>Этот проект выполнен в Школе лингвистики НИУ ВШЭ.<br/>
+            Над проектом работали студенты магистратуры  образовательной программы "Компьютерная лингвистика":
+            <ul>
+              <li>Кирилл Милинцевич</li>
+              <li>Мария Пономарева</li>
+              <li>Александра Липунова</li>
+              <li>Алла Тамбовцева</li>
+              <li>Антон Клименков</li>
+            </ul>
             <br/>
+            Руководитель проекта:
+            <ul><li>Анатолий Старостин</li></ul>
+            <br/>
+            Мы благодарны Е.Л.Черняк и А.А.Бонч-Осмоловской за помощь и поддержку.<br/>
+            Проект также благодарит Национальный корпус русского языка за предоставленные данные
+          </p>
         </div>
       </div>
-    </div>
-    
-    
-    
-    <div class="container">
-        <div class="row col-md-12" id="resultsContainer">
-            
-        </div>
     </div>
   </main>
 
+      <footer class="footer">
+        <div class="container">
+          <p>&copy; sStress 2017</p>
+        </div>
+      </footer>
      <!-- /container --> 
         <script src="{{ url_for('static', filename='js/vendor/jquery-1.11.2.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>
