@@ -2,6 +2,7 @@ from keras.models import model_from_json
 import tensorflow as tf
 import numpy as np
 import re
+import os
 from .tokenizer import tokenize
 
 VOWELS = 'аеиоуэюяыё'
@@ -11,9 +12,10 @@ CHARS = ["'", '-', '_', 'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', '�
          'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш',
          'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', 'ё']
 CHAR_INDICES = dict((c, i) for i, c in enumerate(CHARS))
-MODEL_FILE = "lstm/text_model.json"
-WEIGHTS_FILE = "lstm/on-texts-weights-improvement-09-0.96.hdf5"
-ALL_FORMS_FILENAME = "lstm/ruwiktionary_zalizniak.sm"
+BASE_DIR = os.path.dirname(__file__)
+MODEL_FILE = os.path.join(BASE_DIR, "text_model.json")
+WEIGHTS_FILE = os.path.join(BASE_DIR, "on-texts-weights-improvement-09-0.96.hdf5")
+ALL_FORMS_FILENAME = os.path.join(BASE_DIR, "ruwiktionary_zalizniak.sm")
 
 
 class AccentLSTM(object):
