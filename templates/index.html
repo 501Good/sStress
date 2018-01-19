@@ -39,10 +39,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Главная</a>
-          <a class="navbar-brand" href="/test">Проверка навыков</a>
-          <a class="navbar-brand" href="/stresses">Акцентуаторы</a>
-          <a class="navbar-brand" href="/about">О проекте</a>
+          <a class="navbar-brand" href="{{ url_for('index') }}">Главная</a>
+          <a class="navbar-brand" href="{{ url_for('test') }}">Проверка навыков</a>
+          <a class="navbar-brand" href="{{ url_for('stresses') }}">Акцентуаторы</a>
+          <a class="navbar-brand" href="{{ url_for('about') }}">О проекте</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           
@@ -95,7 +95,7 @@
         <div class="col-md-4">
           <p>Также вы можете загрузить файл в формате .txt (кодировка UTF-8), чтобы получить размеченный нейронным акцентуатором текст:</p>
           <br/>
-          <form action="/upload" method="post" enctype="multipart/form-data">
+          <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
             <input type="file"  name="file" />
             <br/>
             <input type="submit" class="btn btn-primary file-sender" value="Загрузить"/>
