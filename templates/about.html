@@ -58,35 +58,38 @@
         <p>Мы ставим ударения!</p>
         <!-- p><a class="btn btn-primary btn-lg" href="#" role="button">Узнать больше &raquo;</a></p-->
       </div>
-    
-    <br/>
-    <br/>
+      
+      <br/>
     
     <div class="container">
-      <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#home"><h4>Задача проекта</h4></a></li>
-        <li><a data-toggle="tab" href="#menu1"><h4>Что у нас есть</h4></a></li>
-        <li><a data-toggle="tab" href="#menu2"><h4>Наша команда</h4></a></li>
-      </ul>
-
-      <br/>
-
-      <div class="tab-content">
-        <div id="home" class="tab-pane fade in active">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+        <h3>Задача проекта</h3>
+        </div>
+        <div class="panel-body">
           <p>Создать акцентуатор для русского языка - автоматическую систему, принимающую на вход текст на русском языке и расставляющую в нем ударения.</p>
           <p>Акцентуатор может быть встроен как модуль в системы для генерации речи, также он может быть полезен изучающим русский язык иностранцам.</p>
         </div>
-        <div id="menu1" class="tab-pane fade">
-          <p>На нашем сайте выложены два акцентуатора, один - нейросеть, обученная на большом корпусе. Она быстро и хорошо работающая черная коробка. Если вам нужно быстро проставить в тексте ударения, вам к ней.</p>
-          <p>Второй акцентуатор правиловый, это результат долгого и кропотливого труда. Если вы хотите узнать не только само ударение, но и то, почему его позиция именно такая, то вам поможет наш правиловый акцентуатор.</p>
+        <div class="panel-heading">
+        <h3>Ресурсы</h3>
         </div>
-        <div id="menu2" class="tab-pane fade">
-          <p>Этот проект выполнен в Школе лингвистики НИУ ВШЭ.<br/>
-            Над проектом работали студенты магистратуры  образовательной программы "Компьютерная лингвистика":
+        <div class="panel-body">
             <ul>
-              <li>Кирилл Милинцевич</li>
-              <li>Мария Пономарева</li>
-              <li>Александра Липунова</li>
+              <li>Статья об устройстве нейронного акцентуатора. <a href="http://www.aclweb.org/anthology/W/W17/W17-4104.pdf" target="blank_">«Automated Word Stress Detection in Russian», EMNLP-2017, Copenhagen, Denmark</a></li>
+              <li><a href="https://github.com/501Good/sStress/tree/dev" target="blank_">GitHub репозиторий проекта</a></li>
+              <li><a href="https://pypi.python.org/pypi/russtress" target="blank_">Модуль нейронного акцентуатора для Python</a></li>
+            </ul>
+        </div>
+        <div class="panel-heading">
+        <h3>Наша команда</h3>
+        </div>
+        <div class="panel-body">
+          <p>Этот проект выполнен в <a href="https://ling.hse.ru/" target="_blank">Школе лингвистики НИУ ВШЭ</a>.<br/>
+            Над проектом работали студенты <a href="https://www.hse.ru/ma/ling" target="_blank">магистратуры образовательной программы "Компьютерная лингвистика"</a>:
+            <ul>
+              <li>Кирилл Милинцевич (<a href="mailto:knmilintsevich@hotmail.com">knmilintsevich@hotmail.com</a>)</li>
+              <li>Мария Пономарева (<a href="mailto:ponomarevamawa@gmail.com">ponomarevamawa@gmail.com</a>)</li>
+              <li>Александра Липунова (<a href="mailto:bennet.ray@yandex.ru">bennet.ray@yandex.ru</a>)</li>
               <li>Алла Тамбовцева</li>
               <li>Антон Клименков</li>
             </ul>
@@ -95,18 +98,12 @@
             <ul><li>Анатолий Старостин</li></ul>
             <br/>
             Мы благодарны Е.Л.Черняк и А.А.Бонч-Осмоловской за помощь и поддержку.<br/>
-            Проект также благодарит Национальный корпус русского языка за предоставленные данные
+            Проект также благодарит <a href="http://www.ruscorpora.ru/" target="_blank">Национальный корпус русского языка</a> за предоставленные данные.
           </p>
         </div>
       </div>
     </div>
   </main>
-
-      <footer class="footer">
-        <div class="container">
-          <p>&copy; sStress 2017</p>
-        </div>
-      </footer>
      <!-- /container --> 
         <script src="{{ url_for('static', filename='js/vendor/jquery-1.11.2.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>

@@ -57,6 +57,9 @@
         <h1>sStr<font color="#88B04B">e</font>ss</h1>
         <p>Мы ставим ударения!</p>
         <!-- p><a class="btn btn-primary btn-lg" href="#" role="button">Узнать больше &raquo;</a></p-->
+        <br/>
+        <p>На нашем сайте выложены два акцентуатора, один - нейросеть, обученная на большом корпусе. Она быстро и хорошо работающая черная коробка. Если вам нужно быстро проставить в тексте ударения, вам к ней. Выберете <b>"LSTM"</b>, чтобы текст обрабатывался нейроакцентуатором.</p>
+        <p>Второй акцентуатор правиловый, это результат долгого и кропотливого труда. Если вы хотите узнать не только само ударение, но и то, почему его позиция именно такая, то вам поможет наш правиловый акцентуатор. Чтобы использовать его, выберете в выпадающем меню <b>"На правилах"</b>.</p>
       </div>
     
     <br/>
@@ -69,11 +72,13 @@
               <div class="form-group">
                 <textarea name="lstm" rows="9" id="lstm_text" class="form-control lstm" placeholder="Текст, в котором нужно расставить ударения"></textarea>
               </div>
+              <div class="containter">
+              <div class="row-md-5">
               <div class="form-inline">
                 <div class="form-group">
                   <select class="form-control" id="ServerKey" name="ServerKey">
                     <option value="lstm">LSTM</option>
-                    <option value="rules">На основе словаря</option>
+                    <option value="rules">На правилах</option>
                   </select>
                 </div>  
               </div>  
@@ -85,6 +90,10 @@
                 <a class="btn btn-link clear" role="button" href="#">
                   Очистить
                 </a>
+              </div>
+              </div>
+              <div class="row-md-7">
+                           </div>
               </div>
             </form>
           </div>
