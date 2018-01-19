@@ -1,14 +1,18 @@
 import re, os, nltk, pymorphy2, sys
 from suffix_trees.STree import STree
 
+BASE_DIR = os.path.dirname(__file__)
+
 
 def make_rules(folder):
     rules_dictionary = {}
     try:
         path = os.path.join(os.getcwd(), 'rules', 'data', folder)
+        path = os.path.join(BASE_DIR, path)
         files = os.listdir(path)
     except:
         path = os.path.join(os.getcwd(), 'data', folder)
+        path = os.path.join(BASE_DIR, path)
         files = os.listdir(path)
     short_files_rule = re.compile('.txt')
     for file in files:
