@@ -6,14 +6,9 @@ BASE_DIR = os.path.dirname(__file__)
 
 def make_rules(folder):
     rules_dictionary = {}
-    try:
-        path = os.path.join(os.getcwd(), 'rules', 'data', folder)
-        path = os.path.join(BASE_DIR, path)
-        files = os.listdir(path)
-    except:
-        path = os.path.join(os.getcwd(), 'data', folder)
-        path = os.path.join(BASE_DIR, path)
-        files = os.listdir(path)
+    path = os.path.join(BASE_DIR, 'data', folder)
+    #path = os.path.join(BASE_DIR, path)
+    files = os.listdir(path)
     short_files_rule = re.compile('.txt')
     for file in files:
         if short_files_rule.search(file) != None:
@@ -128,8 +123,61 @@ def make_stressed_word(possible_types, token, lemma, biggest_suffix, original_to
     return(stressed_word)
 
 
+def compare_type_A(exc_type, rules_dictionary, lemma, origin_token, part_of_speech):
+    morph = pymorphy2.MorphAnalyzer()
+    stressed_word, status = '', False
+    for word in rules_dictionary[exc_type]:
+        word_groups = re.search('([а-яё]*)\'([а-яё]*)', word)
+        stress_after = len(word_groups.group(1))
+        unstressed_word = word_groups.group(1) + word_groups.group(2)
+        if 'ADJ' in part_of_speech:
+            compare_word = morph.parse(unstressed_word)[0].normal_form
+        else:
+            compare_word = unstressed_word
+        if compare_word == lemma:
+            stressed_word = origin_token[:stress_after] + '\'' + origin_token[stress_after:]
+            status = True
+            break
+    return(stressed_word, status)
+
+
+def process_exclusions(part_of_speech, lemma, origin_token, rules_dictionary):
+    stressed_word = ''
+    if part_of_speech == 'NOUN':
+        stressed_word, status = compare_type_A('exc type A', rules_dictionary, lemma, origin_token, part_of_speech)
+        if status == False:
+            for word in rules_dictionary['exc type B']:
+                word_groups = re.search('([а-яё]*)\'([а-яё]*)', word)
+                stress_after = len(word_groups.group(1))
+                unstressed_word = word_groups.group(1) + word_groups.group(2)
+                if unstressed_word == lemma:
+                    stressed_word = re.sub('^(.+[уеыаоэяиюё])([^уеыаоэяиюё]*)$', '\g<1>\'\g<2>', origin_token)
+                    status = True
+                    break
+            if status == False:
+                for word in rules_dictionary['exc type D']:
+                    unstressed_word = re.sub('\'', '', word)
+                    if unstressed_word == origin_token:
+                        stressed_word = word
+                        break
+            
+    if 'ADJ' in part_of_speech:
+        stressed_word, status = compare_type_A('exc type A', rules_dictionary, lemma, origin_token, part_of_speech)
+        if status == False:
+            stressed_word, status = compare_type_A('exc type B', rules_dictionary, lemma, origin_token, part_of_speech)
+
+    if part_of_speech == 'VERB':
+        stressed_word, status = compare_type_A('exc type A', rules_dictionary, lemma, origin_token, part_of_speech)
+        if status == False:
+            stressed_word, status = compare_type_A('exc type B', rules_dictionary, lemma, origin_token, part_of_speech)
+
+    return(stressed_word)
+
+
 def process_stresses(part_of_speech, rules, pos, lemma, token, original_token, word_possible_stress, current_file):
-    stressed_word, biggest_suffix, possible_types = '', '', ['']
+    exclusion_flag, finish_flag = False, False
+    stressed_word, biggest_suffix, possible_types = original_token, '', ['']
+    
     if part_of_speech in pos:
         word_possible_stress = find_affixes(rules, lemma, word_possible_stress)
 
@@ -140,11 +188,18 @@ def process_stresses(part_of_speech, rules, pos, lemma, token, original_token, w
             possible_types = find_possible_types(word_possible_stress, biggest_suffix, biggest_prefix)
             if len(possible_types) == 1:
                 stressed_word = make_stressed_word(possible_types, token, lemma, biggest_suffix, original_token)
-                current_file = re.sub(original_token, stressed_word, current_file)
-##                if pos == 'VERB':
-##                    print(pos, lemma, token, stressed_word, biggest_suffix, possible_types[0])
+
+        exclusion = process_exclusions(part_of_speech, lemma, original_token, rules)
+        if exclusion != '':
+            stressed_word = exclusion
+            exclusion_flag = True
+        current_file = re.sub(original_token, stressed_word, current_file)
+
+
     if possible_types == []: possible_types = ['']
-    return(current_file, stressed_word, biggest_suffix, possible_types[0])
+
+    if stressed_word != original_token: finish_flag = True
+    return(current_file, stressed_word, biggest_suffix, possible_types[0], exclusion_flag, finish_flag)
 
 
 def initialize(current_file):
@@ -165,15 +220,17 @@ def initialize(current_file):
             # pos = nltk.pos_tag(token, lang='rus')
             lemma = morph.parse(token)[0].normal_form
             if pos != None:
-                current_file, stressed_word, biggest_suffix, stress_type = process_stresses('NOUN', rules_noun, pos, lemma, token, original_token, word_possible_stress, current_file)
-                if biggest_suffix == '':
-                    current_file,stressed_word, biggest_suffix, stress_type = process_stresses('ADJF', rules_adj, pos, lemma, token, original_token, word_possible_stress, current_file)
-                    if biggest_suffix == '':
-                        current_file, stressed_word, biggest_suffix, stress_type = process_stresses('VERB', rules_verb, pos, lemma, token, original_token, word_possible_stress, current_file)
+                if pos == 'PRTF': pos = 'ADJF'
+                if pos == 'INFN': pos = 'VERB'
+                current_file, stressed_word, biggest_suffix, stress_type, exclusion_flag, finish_flag = process_stresses('NOUN', rules_noun, pos, lemma, token, original_token, word_possible_stress, current_file)
+                if biggest_suffix == '' and finish_flag == False:
+                    current_file,stressed_word, biggest_suffix, stress_type, exclusion_flag, finish_flag = process_stresses('ADJF', rules_adj, pos, lemma, token, original_token, word_possible_stress, current_file)
+                    if biggest_suffix == '' and finish_flag == False:
+                        current_file, stressed_word, biggest_suffix, stress_type, exclusion_flag, finish_flag = process_stresses('VERB', rules_verb, pos, lemma, token, original_token, word_possible_stress, current_file)
         if stressed_word == '':
             stressed_word = original_token
         stressed_words.append(stressed_word)
         biggest_suffixes.append(biggest_suffix)
         stress_types.append(stress_type)
         poses.append(pos)
-    return(current_file, stressed_words, biggest_suffixes, stress_types, poses)
+    return(current_file, stressed_words, biggest_suffixes, stress_types, poses, exclusion_flag)

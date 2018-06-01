@@ -104,20 +104,13 @@ def predict_rules():
     text = request.get_data().decode('utf-8')
     text = text.replace("́", "")
     text = text.replace("'", "")
-    accented_text, accented_tokens, biggest_suffixes, stress_types, poses = rules.initialize(text)
+    accented_text, accented_tokens, biggest_suffixes, stress_types, poses, exclusion_flag = rules.initialize(text)
     for i in range(len(accented_tokens)):
         if "'" in accented_tokens[i]:
             new_word = ''
-            for index, char in enumerate(accented_tokens[i]):
-                if index + 1 < len(accented_tokens[i]):
-                    if accented_tokens[i][index + 1] in ["'", "́"]:
-                        new_word += '<b><span style="background-color: ' + \
-                            '#82E0AA">{}</span></b>'.format(char)
-                    elif char not in ["'", "́"]:
-                        new_word += char
-                else:
-                    if char not in ["'", "́"]:
-                        new_word += char
+
+            new_word = re.sub('([^\']*)([^\'])\'([^\']*)', '\g<1><b><span style="background-color: ' + \
+                              '#82E0AA">\g<2></span></b>\g<3>', accented_tokens[i])
 
             if poses[i] == 'NOUN':
                 formated_pos = 'существительное'
@@ -145,10 +138,20 @@ def predict_rules():
             if stress_types[i] == 'type B':
                 formated_type = 'флексию'
 
-            new_text = '<span title="Слово было распознано как {},'.format(formated_pos) + \
-                'в котором лемма оканчивается на {}.\n'.format(biggest_suffixes[i]) + \
-                'В таких случаях ударение всегда падает на {}.">'.format(formated_type) + \
-                '{}</span>'.format(new_word)
+            if exclusion_flag == True:
+                exclusion_text = 'Однако это слово является исключением.'
+                exclusion_text2 = 'Слово является исключением.'
+            else:
+                exclusion_text = ''
+
+            try:
+                new_text = '<span title="Слово было распознано как {},'.format(formated_pos) + \
+                    'в котором лемма оканчивается на {}.\n'.format(biggest_suffixes[i]) + \
+                    'В таких случаях ударение всегда падает на {}'.format(formated_type) + \
+                    '. {}">'.format(exclusion_text) + \
+                    '{}</span>'.format(new_word)
+            except:
+                new_text = '<span title="' + exclusion_text2 + '">' + '{}</span>'.format(new_word)
 
             accented_text = re.sub(accented_tokens[i],
                                    new_text, accented_text, 1)
