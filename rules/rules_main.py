@@ -1,6 +1,7 @@
 import re, os, nltk, pymorphy2, sys
 from suffix_trees.STree import STree
 
+
 BASE_DIR = os.path.dirname(__file__)
 
 
@@ -176,7 +177,7 @@ def process_exclusions(part_of_speech, lemma, origin_token, rules_dictionary):
 
 def process_stresses(part_of_speech, rules, pos, lemma, token, original_token, word_possible_stress, current_file):
     exclusion_flag, finish_flag = False, False
-    stressed_word, biggest_suffix, possible_types = original_token, '', ['']
+    stressed_word, biggest_prefix, biggest_suffix, possible_types = original_token, '', '', ['']
     
     if part_of_speech in pos:
         word_possible_stress = find_affixes(rules, lemma, word_possible_stress)
@@ -199,7 +200,7 @@ def process_stresses(part_of_speech, rules, pos, lemma, token, original_token, w
     if possible_types == []: possible_types = ['']
 
     if stressed_word != original_token: finish_flag = True
-    return(current_file, stressed_word, biggest_suffix, possible_types[0], exclusion_flag, finish_flag)
+    return(current_file, stressed_word, biggest_prefix, biggest_suffix, possible_types[0], exclusion_flag, finish_flag)
 
 
 def initialize(current_file):
@@ -208,7 +209,7 @@ def initialize(current_file):
     rules_adj = make_rules('ADJ')
     rules_verb = make_rules('VERB')
     all_tokens = nltk.word_tokenize(current_file)
-    stressed_words, biggest_suffixes, stress_types, poses = [], [], [], []
+    stressed_words, biggest_prefixes, biggest_suffixes, stress_types, poses = [], [], [], [], []
     for token in all_tokens:
         stressed_word, biggest_suffix, stress_type, pos = token, '', '', ''
         original_token = token
@@ -222,15 +223,16 @@ def initialize(current_file):
             if pos != None:
                 if pos == 'PRTF': pos = 'ADJF'
                 if pos == 'INFN': pos = 'VERB'
-                current_file, stressed_word, biggest_suffix, stress_type, exclusion_flag, finish_flag = process_stresses('NOUN', rules_noun, pos, lemma, token, original_token, word_possible_stress, current_file)
-                if biggest_suffix == '' and finish_flag == False:
-                    current_file,stressed_word, biggest_suffix, stress_type, exclusion_flag, finish_flag = process_stresses('ADJF', rules_adj, pos, lemma, token, original_token, word_possible_stress, current_file)
-                    if biggest_suffix == '' and finish_flag == False:
-                        current_file, stressed_word, biggest_suffix, stress_type, exclusion_flag, finish_flag = process_stresses('VERB', rules_verb, pos, lemma, token, original_token, word_possible_stress, current_file)
-        if stressed_word == '':
-            stressed_word = original_token
-        stressed_words.append(stressed_word)
-        biggest_suffixes.append(biggest_suffix)
-        stress_types.append(stress_type)
-        poses.append(pos)
-    return(current_file, stressed_words, biggest_suffixes, stress_types, poses, exclusion_flag)
+                current_file, stressed_word, biggest_prefix, biggest_suffix, stress_type, exclusion_flag, finish_flag = process_stresses('NOUN', rules_noun, pos, lemma, token, original_token, word_possible_stress, current_file)
+                if finish_flag == False:
+                    current_file,stressed_word, biggest_prefix, biggest_suffix, stress_type, exclusion_flag, finish_flag = process_stresses('ADJF', rules_adj, pos, lemma, token, original_token, word_possible_stress, current_file)
+                    if finish_flag == False:
+                        current_file, stressed_word, biggest_prefix, biggest_suffix, stress_type, exclusion_flag, finish_flag = process_stresses('VERB', rules_verb, pos, lemma, token, original_token, word_possible_stress, current_file)
+            if stressed_word == '':
+                stressed_word = original_token
+            stressed_words.append(stressed_word)
+            biggest_prefixes.append(biggest_prefix)
+            biggest_suffixes.append(biggest_suffix)
+            stress_types.append(stress_type)
+            poses.append(pos)
+    return(current_file, stressed_words, biggest_prefixes, biggest_suffixes, stress_types, poses, exclusion_flag)
