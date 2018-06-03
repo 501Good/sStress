@@ -104,7 +104,7 @@ def predict_rules():
     text = request.get_data().decode('utf-8')
     text = text.replace("́", "")
     text = text.replace("'", "")
-    accented_text, accented_tokens, biggest_suffixes, stress_types, poses, exclusion_flag = rules.initialize(text)
+    accented_text, accented_tokens, biggest_prefixes, biggest_suffixes, stress_types, poses, exclusion_flag = rules.initialize(text)
     for i in range(len(accented_tokens)):
         if "'" in accented_tokens[i]:
             new_word = ''
@@ -145,11 +145,19 @@ def predict_rules():
                 exclusion_text = ''
 
             try:
-                new_text = '<span title="Слово было распознано как {},'.format(formated_pos) + \
-                    'в котором лемма оканчивается на {}.\n'.format(biggest_suffixes[i]) + \
+                if biggest_prefixes[i] != '':
+                    new_text = '<span title="Слово было распознано как {},'.format(formated_pos) + \
+                    'в котором лемма начинается на {}'.format(biggest_prefixes[i]) + \
+                    ' и оканчивается на {}.\n'.format(biggest_suffixes[i]) + \
                     'В таких случаях ударение всегда падает на {}'.format(formated_type) + \
                     '. {}">'.format(exclusion_text) + \
                     '{}</span>'.format(new_word)
+                else:
+                    new_text = '<span title="Слово было распознано как {},'.format(formated_pos) + \
+                        'в котором лемма оканчивается на {}.\n'.format(biggest_suffixes[i]) + \
+                        'В таких случаях ударение всегда падает на {}'.format(formated_type) + \
+                        '. {}">'.format(exclusion_text) + \
+                        '{}</span>'.format(new_word)
             except:
                 new_text = '<span title="' + exclusion_text2 + '">' + '{}</span>'.format(new_word)
 
